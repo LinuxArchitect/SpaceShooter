@@ -13,3 +13,6 @@ I coded my script to get the Player's screen position and compare the position w
 I've built the game, v1, for Linux desktop and converted it into a deb file for easy installation. I struggled a bit to get UnityPlayer.so included in the package at the right location. I had never built a deb file until now.
 
 This commit also added a WebGL build but that is broken at the moment, and not deployed to my new website which is, of course, under construction. However, my new mantra is build the basic functionality quick and add features later. As evidenced by version 1 of this game.
+
+### WebGL Build
+To get the WebGL build to work on Debian 12, which does not ship python2 and is missing a synonym for "python", I had to install python-is-python3, python3-distutils, and libtinfo5. I copied the resulting build folder up to my new website and it works like a charm. Play it [here](https://themc.games/SpaceShooter-C001/).
