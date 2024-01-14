@@ -16,3 +16,6 @@ This commit also added a WebGL build but that is broken at the moment, and not d
 
 ### WebGL Build
 To get the WebGL build to work on Debian 12, which does not ship python2 and is missing a synonym for "python", I had to install python-is-python3, python3-distutils, and libtinfo5. I copied the resulting build folder up to my new website and it works like a charm. Play it [here](https://themc.games/SpaceShooter-C001/).
+
+### Commit C002
+We completed the second round of code challenges by implementing a laser fire system.
