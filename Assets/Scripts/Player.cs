@@ -8,38 +8,27 @@ public class Player : MonoBehaviour
     // FIXME, make these configurable
     [SerializeField] private float _speed = 10.0f;  
     [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private float _laserSpawnOffset = 0.8f; 
     [SerializeField] private float fireRate = 0.2f;
     [SerializeField] private int _lives = 3;
-
-    private float nextFireTime = 0f;
-    private float nextSpawnTime = 3f;
+    private GameObject _gameObject;
+    private SpawnManager _spawnManager;
+    private float _nextFireTime;
     
     void Start()
     {
-        //Debug.Log("Hello: " + gameObject.name);
-
-        // set starting location
         transform.position = new Vector3(0f, 0f, 0f);
+        _gameObject = GameObject.Find("/Spawn Manager");
+        if (_gameObject != null)
+        {
+            _spawnManager = _gameObject.transform.GetComponent<SpawnManager>();
+        }
     }
 
     void Update()
     {
         ProcessWASD();
         ProcessSpaceKey();
-        
-        // temp spawn system for enemy
-        if (Time.time > nextSpawnTime)
-        {
-            Vector3 bottomLeftOfScreen = new Vector3(0f, 0f, 0f);
-            Vector3 leftBottomOfScreen = Camera.main.ScreenToWorldPoint(bottomLeftOfScreen);
-            Vector3 rightTopOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
-            float randomX = Random.Range(leftBottomOfScreen.x, rightTopOfScreen.x);
-            var enemySpawnPosition = new Vector3(randomX, rightTopOfScreen.y, 0f);
-            Instantiate(_enemyPrefab, enemySpawnPosition, Quaternion.identity);
-            nextSpawnTime = Time.time + Random.Range(0.5f, 3f);
-        }
     }
 
     void ProcessWASD()
@@ -87,21 +76,11 @@ public class Player : MonoBehaviour
     void ProcessSpaceKey()
     {
         // Space key action
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > nextFireTime)
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _nextFireTime)
         {
             var laserSpawnPosition = transform.position + new Vector3(0f, _laserSpawnOffset, 0f);
             Instantiate(_laserPrefab, laserSpawnPosition, Quaternion.identity);
-            nextFireTime = Time.time + fireRate;
-        }
-        // REMOVEME
-        if (Input.GetKeyDown(KeyCode.Period))
-        {
-            Vector3 bottomLeftOfScreen = new Vector3(0f, 0f, 0f);
-            Vector3 leftBottomOfScreen = Camera.main.ScreenToWorldPoint(bottomLeftOfScreen);
-            Vector3 rightTopOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
-            float randomX = Random.Range(leftBottomOfScreen.x, rightTopOfScreen.x);
-            var enemySpawnPosition = new Vector3(randomX, rightTopOfScreen.y, 0f);
-            Instantiate(_enemyPrefab, enemySpawnPosition, Quaternion.identity);
+            _nextFireTime = Time.time + fireRate;
         }
     }
 
@@ -111,6 +90,10 @@ public class Player : MonoBehaviour
         if (_lives < 1)
         {
             Debug.Log("Game Over");
+            if (_spawnManager != null)
+            {
+                _spawnManager.OnPlayerDeath();
+            }
             Destroy(this.gameObject);
         }
     }

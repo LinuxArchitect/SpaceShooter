@@ -18,9 +18,6 @@ public class Enemy : MonoBehaviour
     {
         // get our screen position in pixels
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
         Vector3 bottomLeftOfScreen = new Vector3(0f, 0f, 0f);
         Vector3 leftBottomOfScreen = Camera.main.ScreenToWorldPoint(bottomLeftOfScreen);
         Vector3 rightTopOfScreen = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
@@ -35,7 +32,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
